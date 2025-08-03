@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from pyrogram import Client
-from pyrogram.sessions import StringSession
+from pyrogram.session import StringSession
 import asyncio
 import time
 import base64
@@ -10,19 +10,19 @@ API_ID = 17570480
 API_HASH = "18c5be05094b146ef29b0cb6f6601f1f"
 B64_FILE = "nabi_session.b64"
 
-# Base64 session string'i oku
+# Base64 string decode
 if not os.path.exists(B64_FILE):
     raise FileNotFoundError(f"{B64_FILE} bulunamadı!")
 
 with open(B64_FILE, "r") as f:
-    string = f.read().strip()
+    b64_string = f.read().strip()
 
 try:
-    decoded_session = base64.b64decode(string).decode()
+    decoded_session = base64.b64decode(b64_string).decode()
 except Exception as e:
     raise ValueError("Base64 decoding hatası: " + str(e))
 
-# Flask ve event loop
+# Flask ve async loop
 app = Flask(__name__)
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)
@@ -42,17 +42,14 @@ async def sorgu_gonder(komut, tc):
     ) as app:
         sahmaran = await app.get_users("SahmaranBot")
 
-        # Mevcut en son mesaj ID’sini al
         last_message_id = 0
         async for msg in app.get_chat_history(sahmaran.id, limit=1):
             last_message_id = msg.id
             break
 
-        # Komutu gönder
         await app.send_message(sahmaran.id, f"/{komut} {tc}")
         await asyncio.sleep(2)
 
-        # Sonraki mesajları 20 saniye boyunca dinle
         baslangic = time.time()
         while time.time() - baslangic < 20:
             async for msg in app.get_chat_history(sahmaran.id, offset_id=last_message_id, limit=10):

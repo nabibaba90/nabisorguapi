@@ -1,6 +1,6 @@
 from flask import Flask, jsonify
 from pyrogram import Client
-from pyrogram.session import StringSession  # DİKKAT: 'session' tek 's'
+from pyrogram.raw.all import StringSession
 import asyncio
 import time
 import base64

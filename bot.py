@@ -1,16 +1,16 @@
 from flask import Flask, jsonify
 from pyrogram import Client
-from pyrogram.session import StringSession
+from pyrogram.session import StringSession  # DİKKAT: 'session' tek 's'
 import asyncio
 import time
 import base64
 import os
 
-API_ID = 17570480
-API_HASH = "18c5be05094b146ef29b0cb6f6601f1f"
+API_ID = int(os.getenv("API_ID", 17570480))
+API_HASH = os.getenv("API_HASH", "18c5be05094b146ef29b0cb6f6601f1f")
 B64_FILE = "nabi_session.b64"
 
-# Base64 decode işlemi
+# Base64 decode
 if not os.path.exists(B64_FILE):
     raise FileNotFoundError(f"{B64_FILE} bulunamadı!")
 
@@ -22,7 +22,7 @@ try:
 except Exception as e:
     raise ValueError("Base64 decoding hatası: " + str(e))
 
-# Flask ve asyncio loop
+# Flask ve asyncio
 app = Flask(__name__)
 loop = asyncio.new_event_loop()
 asyncio.set_event_loop(loop)

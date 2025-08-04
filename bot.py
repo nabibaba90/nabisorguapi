@@ -1,10 +1,11 @@
 from flask import Flask, jsonify
 from pyrogram import Client
-from pyrogram.raw.all import StringSession
+from pyrogram.session import StringSession
 import asyncio
 import time
 import base64
 import os
+
 
 API_ID = int(os.getenv("API_ID", 17570480))
 API_HASH = os.getenv("API_HASH", "18c5be05094b146ef29b0cb6f6601f1f")
